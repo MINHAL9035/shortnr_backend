@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../schema/user.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UserInterface } from '../interface/user.interface';
 import { UserRegistrationDto } from '../dto/user.registration';
+import { LoginDto } from '../dto/login.dto';
 
 @Injectable()
 export class UserRepository {
@@ -19,5 +20,15 @@ export class UserRepository {
   async createUser(userDetails: UserRegistrationDto): Promise<User> {
     const newUser = new this._userModel(userDetails);
     return await newUser.save();
+  }
+
+  async findJwtUserById(userId: Types.ObjectId): Promise<User> {
+    return await this._userModel.findById(userId).exec();
+  }
+
+  async findUser(userData: LoginDto): Promise<User | null> {
+    return await this._userModel.findOne({
+      email: userData.email,
+    });
   }
 }

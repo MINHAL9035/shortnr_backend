@@ -1,7 +1,16 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { UserRegistrationDto } from '../dto/user.registration';
 import { UserService } from '../service/user.service';
 import { Response } from 'express';
+import { JwtUserGuard } from 'src/guards/jwtUserGuard';
+import { LoginDto } from '../dto/login.dto';
 
 @Controller('user')
 export class UserController {
@@ -13,5 +22,24 @@ export class UserController {
       userName: user.userName,
       image: user.image,
     });
+  }
+
+  @Post('login')
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const user = await this._userService.loginUser(loginDto, res);
+    return res.status(HttpStatus.CREATED).json({
+      userName: user.userName,
+      image: user.image,
+    });
+  }
+
+  @UseGuards(JwtUserGuard)
+  @Post('logOut')
+  async logOut(@Res({ passthrough: true }) res: Response) {
+    const response = await this._userService.logOut(res);
+    return response;
   }
 }

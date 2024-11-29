@@ -19,3 +19,13 @@ export async function generateToken(
     maxAge: 24 * 60 * 60 * 1000,
   });
 }
+
+export function clearTokenCookies(res: Response) {
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.cookie('userJwt', '', {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'strict',
+    expires: new Date(0),
+  });
+}

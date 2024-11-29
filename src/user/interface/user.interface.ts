@@ -4,3 +4,9 @@ export interface UserInterface {
   password?: string;
   image?: string;
 }
+
+export interface ILogin {
+  userName: string;
+  image: string;
+  email: string;
+}
