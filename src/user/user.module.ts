@@ -6,6 +6,10 @@ import { UserService } from './service/user.service';
 import { UserRepository } from './repository/user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UrlController } from './controller/url.controller';
+import { UrlService } from './service/url.service';
+import { UrlRepository } from './repository/url.repository';
+import { UrlSchema } from './schema/url.schema';
 
 @Module({
   imports: [
@@ -21,9 +25,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
 
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: 'User', schema: UserSchema },
+      { name: 'Url', schema: UrlSchema },
+    ]),
   ],
-  controllers: [UserController],
-  providers: [UserService, UserRepository],
+  controllers: [UserController, UrlController],
+  providers: [UserService, UserRepository, UrlService, UrlRepository],
 })
 export class UserModule {}

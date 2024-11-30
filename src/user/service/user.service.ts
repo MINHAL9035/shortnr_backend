@@ -55,7 +55,6 @@ export class UserService {
       const { password } = LoginDto;
 
       const user = await this._userRepository.findUser(LoginDto);
-      console.log('my user', user);
 
       if (!user) {
         throw new UnauthorizedException('You are not a user, please sign up');

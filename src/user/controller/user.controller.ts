@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpStatus,
-  Post,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { UserRegistrationDto } from '../dto/user.registration';
 import { UserService } from '../service/user.service';
 import { Response } from 'express';
@@ -18,10 +11,8 @@ export class UserController {
   @Post('register')
   async register(@Body() userDto: UserRegistrationDto, @Res() res: Response) {
     const user = await this._userService.registerUser(res, userDto);
-    return res.status(HttpStatus.CREATED).json({
-      userName: user.userName,
-      image: user.image,
-    });
+    const { userName, image } = user;
+    return res.status(201).json({ success: true, data: { userName, image } });
   }
 
   @Post('login')
@@ -30,10 +21,8 @@ export class UserController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const user = await this._userService.loginUser(loginDto, res);
-    return res.status(HttpStatus.CREATED).json({
-      userName: user.userName,
-      image: user.image,
-    });
+    const { userName, image } = user;
+    return res.status(201).json({ success: true, data: { userName, image } });
   }
 
   @UseGuards(JwtUserGuard)
